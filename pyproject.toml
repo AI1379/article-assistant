@@ -1,0 +1,13 @@
+[project]
+name = "article-assistant"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "json-repair>=0.54.3",
+    "loguru>=0.7.3",
+    "openai>=2.14.0",
+    "pydantic>=2.12.5",
+    "pydantic-ai>=1.39.0",
+]
