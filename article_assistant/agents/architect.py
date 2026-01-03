@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from pydantic import BaseModel, Field
 from pydantic_ai import (
     Agent,
+    FunctionToolset,
     Tool,
     PromptedOutput,
     ToolOutput,

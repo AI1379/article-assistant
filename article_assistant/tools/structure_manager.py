@@ -142,9 +142,13 @@ class StructureManager(BaseModel):
             str: The markdown representation of the article structure.
         """
         self.sections.sort(key=lambda s: s.section_index)
-        return "\n\n".join(
+        md_content = ""
+        md_content += f"# {self.title}\n\n"
+        md_content += f"Keywords: {', '.join(self.keywords)}\n\n"
+        md_content += "\n\n".join(
             f"## {section.heading}\n\n{section.contents}" for section in self.sections
         )
+        return md_content
 
     def set_keywords(self, keywords: list[str]) -> None:
         """

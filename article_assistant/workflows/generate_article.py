@@ -2,13 +2,16 @@
 # Created by Renatus Madrigal on 12/28/2025
 #
 
+from typing import Sequence
+
 from loguru import logger
+from pydantic_ai import AbstractToolset
 from pydantic_ai.models import Model
 
 from article_assistant.agents.architect import ArchitectDeps, create_architect_agent
+from article_assistant.agents.reviewer import ReviewerDeps, create_reviewer_agent
 from article_assistant.agents.scriber import ScriberDeps, create_scriber_agent
 from article_assistant.agents.stylist import create_stylist_agent
-from article_assistant.agents.reviewer import create_reviewer_agent, ReviewerDeps
 from article_assistant.tools import (
     KnowledgeBase,
     StructureManager,
@@ -22,6 +25,7 @@ async def generate_article_workflow(
     topic: str,
     target_language: str,
     target_audience: str,
+    toolsets: Sequence[AbstractToolset] = [],
 ) -> str:
     logger.info("Starting article generation workflow.")
     kb = KnowledgeBase()
@@ -30,6 +34,7 @@ async def generate_article_workflow(
     architect_agent = create_architect_agent(
         model,
         additional_tools=get_base_tools(),
+        toolsets=toolsets,
     )
 
     outline = await architect_agent.run(
@@ -49,6 +54,7 @@ async def generate_article_workflow(
         model,
         additional_tools=get_base_tools(),
         target_language=target_language,
+        toolsets=toolsets,
     )
 
     style_result = await stylist.run(
@@ -71,6 +77,7 @@ async def generate_article_workflow(
     scriber_agent = create_scriber_agent(
         model,
         additional_tools=get_base_tools(),
+        toolsets=toolsets,
     )
 
     for idx, outline_item in enumerate(structure_manager.outline.outline_items[1:-1]):
@@ -114,6 +121,7 @@ async def generate_article_workflow(
     reviewer_agent = create_reviewer_agent(
         model,
         additional_tools=get_base_tools(),
+        toolsets=toolsets,
     )
 
     review_result = await reviewer_agent.run(
